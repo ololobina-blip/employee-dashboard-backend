@@ -29,6 +29,26 @@ function toSqlDate(value: string): string {
   return parseSheetDate(value).toISOString().split('T')[0]
 }
 
+async function ensureSyncSchema(connection: Awaited<ReturnType<typeof createConnection>>): Promise<void> {
+  console.log('[SYNC] Ensuring DB schema for long text fields...')
+
+  const queries = [
+    `ALTER TABLE tickets MODIFY COLUMN caller_number TEXT NULL`,
+    `ALTER TABLE appeals MODIFY COLUMN caller_number TEXT NULL`,
+    `ALTER TABLE tickets MODIFY COLUMN link TEXT NULL`,
+    `ALTER TABLE tickets MODIFY COLUMN execution_link TEXT NULL`,
+    `ALTER TABLE appeals MODIFY COLUMN ticket_link TEXT NULL`,
+  ]
+
+  for (const sql of queries) {
+    try {
+      await connection.query(sql)
+    } catch (error) {
+      console.warn('[SYNC] Schema update skipped or failed:', sql, error)
+    }
+  }
+}
+
 async function syncToDatabase(
   parsedRows: ReturnType<typeof parseSheetRows>,
   clientRatings: Array<{ date: string; comment: string; rating: number; responsible: string }>,
@@ -37,6 +57,9 @@ async function syncToDatabase(
 
   try {
     console.log('[SYNC] Starting database sync...')
+
+    await ensureSyncSchema(connection)
+
     await connection.beginTransaction()
     await connection.query('DELETE FROM tickets')
     await connection.query('DELETE FROM appeals')
