@@ -61,7 +61,7 @@ async function syncToDatabase(
       const t = row.ticket
       await connection.query(
         `INSERT INTO tickets (
-          employee_name, source_type, date, ticket_datetime_raw, month_year,
+          employee_name, source_type, \`date\`, ticket_datetime_raw, month_year,
           etiquette_comment, solution_comment, speed_comment, availability_comment, participation_comment, total_score,
           original_etiquette_comment, original_solution_comment, original_speed_comment,
           original_availability_comment, original_participation_comment, original_total_score,
