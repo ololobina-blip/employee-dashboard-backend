@@ -145,14 +145,13 @@ const normalizeAppealStatus = (
 ): 'pending' | 'approved' | 'rejected' => {
   const value = String(status ?? '').trim().toLowerCase()
 
-  if (
-    value === 'approved' ||
-    value === 'Принята' ||
-    value === 'принято' ||
-    value === 'принят'
-  ) {
-    return 'approved'
-  }
+if (
+  value.includes('approved') ||
+  value.includes('принят') ||
+  value.includes('одоб')
+) {
+  return 'approved'
+}
 
   if (
     value === 'rejected' ||
