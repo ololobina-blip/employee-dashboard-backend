@@ -70,7 +70,7 @@ interface AppealRow extends RowDataPacket {
   month_year: string | null
   comment: string | null
   review_comment: string | null
-  status: 'pending' | 'approved' | 'rejected'
+  status: 'pending' | 'Принята' | 'Отклонена'
   submitted_at: Date | string
   resolved_at: Date | string | null
   resolved_by: string | null
