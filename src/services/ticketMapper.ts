@@ -67,7 +67,7 @@ export const parseTicketRow = (
   const revisedTotalScoreRaw = normalizeValue(row[22])
   const revisedTotalScore = revisedTotalScoreRaw ? parseScore(revisedTotalScoreRaw) : undefined
 
-  const appealStatusRaw = normalizeValue(row[13]).toLowerCase()
+  const appealStatusRaw = normalizeValue(row[14]).toLowerCase()
   const isApproved =
     appealStatusRaw === 'принята' ||
     appealStatusRaw === 'approved' ||
