@@ -143,61 +143,52 @@ const mapRatingRow = (row: RatingRow): ClientRating => ({
 const normalizeAppealStatus = (
   status: string | null | undefined,
 ): 'pending' | 'approved' | 'rejected' => {
-  const value = String(status ?? '')
-    .normalize('NFKD')
-    .toLowerCase()
-    .trim()
+  const value = String(status ?? '').trim().toLowerCase()
 
-  const approved = ['approved', 'принят', 'принята', 'принято', 'одобр']
-  const rejected = ['rejected', 'отклон']
-
-  if (approved.some((k) => value.includes(k))) return 'approved'
-  if (rejected.some((k) => value.includes(k))) return 'rejected'
-
-  return 'pending'
-}
-
-  if (APPROVED.some((k) => value.includes(k))) {
+  if (
+    value === 'approved' ||
+    value === 'принята' ||
+    value === 'принято' ||
+    value === 'принят'
+  ) {
     return 'approved'
   }
 
-  if (REJECTED.some((k) => value.includes(k))) {
+  if (
+    value === 'rejected' ||
+    value === 'отклонена' ||
+    value === 'отклонено' ||
+    value === 'отклонен'
+  ) {
     return 'rejected'
   }
 
   return 'pending'
 }
 
-const mapAppealRow = (row: AppealRow): Appeal => {
-  console.log('REAL STATUS FROM DB:', row.status)
-
-  return {
-    id: row.id,
-    ticketLink: row.ticket_link || undefined,
-    callerNumber: row.caller_number || undefined,
-    employeeName: row.employee_name,
-    date: formatTicketDate(row.date),
-    monthYear: row.month_year || undefined,
-    comment: row.comment || '',
-    status: normalizeAppealStatus(row.status),
-    submittedAt: formatIsoDate(row.submitted_at),
-    resolvedAt: row.resolved_at ? formatIsoDate(row.resolved_at) : undefined,
-    resolvedBy: row.resolved_by || undefined,
-    reviewComment: row.review_comment || undefined,
-    newEtiquetteComment: row.new_etiquette_comment || undefined,
-    newSolutionComment: row.new_solution_comment || undefined,
-    newSpeedComment: row.new_speed_comment || undefined,
-    newAvailabilityComment: row.new_availability_comment || undefined,
-    newParticipationComment: row.new_participation_comment || undefined,
-    newTotalScore:
-      row.new_total_score !== null
-        ? Number(row.new_total_score)
-        : undefined,
-    sourceType: row.source_type || undefined,
-    sourceSheetName: row.source_sheet_name || undefined,
-    sourceRow: row.source_row ?? undefined,
-  }
-}
+const mapAppealRow = (row: AppealRow): Appeal => ({
+  id: row.id,
+  ticketLink: row.ticket_link || undefined,
+  callerNumber: row.caller_number || undefined,
+  employeeName: row.employee_name,
+  date: formatTicketDate(row.date),
+  monthYear: row.month_year || undefined,
+  comment: row.comment || '',
+  status: normalizeAppealStatus(row.status),
+  submittedAt: formatIsoDate(row.submitted_at),
+  resolvedAt: row.resolved_at ? formatIsoDate(row.resolved_at) : undefined,
+  resolvedBy: row.resolved_by || undefined,
+  reviewComment: row.review_comment || undefined,
+  newEtiquetteComment: row.new_etiquette_comment || undefined,
+  newSolutionComment: row.new_solution_comment || undefined,
+  newSpeedComment: row.new_speed_comment || undefined,
+  newAvailabilityComment: row.new_availability_comment || undefined,
+  newParticipationComment: row.new_participation_comment || undefined,
+  newTotalScore: row.new_total_score !== null ? Number(row.new_total_score) : undefined,
+  sourceType: row.source_type || undefined,
+  sourceSheetName: row.source_sheet_name || undefined,
+  sourceRow: row.source_row ?? undefined,
+})
 
 export async function getAllEmployees(): Promise<Employee[]> {
   const pool = getPool()
