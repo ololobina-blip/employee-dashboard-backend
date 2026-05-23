@@ -73,7 +73,7 @@ export const parseTicketRow = (
   const revisedTotalScoreRaw = normalizeValue(row[22])
   const revisedTotalScore = revisedTotalScoreRaw ? parseScore(revisedTotalScoreRaw) : undefined
 
-  const appealStatusRaw = normalizeValue(row[14]).toLowerCase()
+  const appealStatusRaw = normalizeValue(row[13]).toLowerCase()
 const isApproved =
   appealStatusRaw.includes('принят') ||
   appealStatusRaw.includes('approved') ||
@@ -114,7 +114,7 @@ const isApproved =
     hasApprovedAppealRevision: hasApprovedRevision,
     link: source === 'chat' ? normalizeValue(row[9]) : '',
     callerNumber: source === 'calls' ? normalizeValue(row[9]) || undefined : undefined,
-    executionLink: source === 'calls' ? normalizeValue(row[10]) || undefined : undefined,
+   executionLink: undefined,
     sourceType: source,
   }
 
