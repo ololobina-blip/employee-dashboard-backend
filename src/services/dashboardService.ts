@@ -143,13 +143,9 @@ const mapRatingRow = (row: RatingRow): ClientRating => ({
 const normalizeAppealStatus = (
   status: string | null | undefined,
 ): 'pending' | 'approved' | 'rejected' => {
-  const value = String(status ?? '').trim().toLowerCase()
+const value = String(status ?? '').trim().toLowerCase()
 
-if (
-  value.includes('approved') ||
-  value.includes('принят') ||
-  value.includes('одоб')
-) {
+if (value.includes('принят') || value.includes('approved') || value.includes('одоб')) {
   return 'approved'
 }
 
