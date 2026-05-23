@@ -24,9 +24,15 @@ export const isRevisedValid = (row: string[]): boolean => {
 
 export const normalizeAppealStatus = (value: string): AppealStatus => {
   const normalized = value.trim().toLowerCase()
-  if (normalized.includes('одоб') || normalized.includes('approv')) return 'approved'
-  if (normalized.includes('отклон') || normalized.includes('reject')) return 'rejected'
-  if (normalized.includes('ожид') || normalized.includes('pend')) return 'pending'
+  if (
+    normalized.includes('одоб') ||
+    normalized.includes('approv') ||
+    normalized.includes('принят')  // ← добавить это
+  ) return 'approved'
+  if (
+    normalized.includes('отклон') ||
+    normalized.includes('reject')
+  ) return 'rejected'
   return 'pending'
 }
 
