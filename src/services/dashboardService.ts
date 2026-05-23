@@ -147,7 +147,7 @@ const normalizeAppealStatus = (
 
   if (
     value === 'approved' ||
-    value === 'принята' ||
+    value === 'Принята' ||
     value === 'принято' ||
     value === 'принят'
   ) {
