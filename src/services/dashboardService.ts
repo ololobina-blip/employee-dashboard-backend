@@ -143,24 +143,21 @@ const mapRatingRow = (row: RatingRow): ClientRating => ({
 const normalizeAppealStatus = (
   status: string | null | undefined,
 ): 'pending' | 'approved' | 'rejected' => {
-  console.log('NORMALIZE STATUS:', status)
-
-  const value = String(status ?? '').trim().toLowerCase()
+  const value = String(status ?? '')
+    .normalize('NFKD')
+    .toLowerCase()
+    .trim()
 
   if (
-    value === 'approved' ||
-    value === 'принята' ||
-    value === 'принято' ||
-    value === 'принят'
+    value.includes('approved') ||
+    value.includes('принят')
   ) {
     return 'approved'
   }
 
   if (
-    value === 'rejected' ||
-    value === 'отклонена' ||
-    value === 'отклонено' ||
-    value === 'отклонен'
+    value.includes('rejected') ||
+    value.includes('отклон')
   ) {
     return 'rejected'
   }
