@@ -70,7 +70,7 @@ interface AppealRow extends RowDataPacket {
   month_year: string | null
   comment: string | null
   review_comment: string | null
-  status: 'pending' | 'Принята' | 'Отклонена'
+  status: string | null
   submitted_at: Date | string
   resolved_at: Date | string | null
   resolved_by: string | null
@@ -140,6 +140,32 @@ const mapRatingRow = (row: RatingRow): ClientRating => ({
   region: row.region || undefined,
 })
 
+const normalizeAppealStatus = (
+  status: string | null | undefined,
+): 'pending' | 'approved' | 'rejected' => {
+  const value = String(status ?? '').trim().toLowerCase()
+
+  if (
+    value === 'approved' ||
+    value === 'принята' ||
+    value === 'принято' ||
+    value === 'принят'
+  ) {
+    return 'approved'
+  }
+
+  if (
+    value === 'rejected' ||
+    value === 'отклонена' ||
+    value === 'отклонено' ||
+    value === 'отклонен'
+  ) {
+    return 'rejected'
+  }
+
+  return 'pending'
+}
+
 const mapAppealRow = (row: AppealRow): Appeal => ({
   id: row.id,
   ticketLink: row.ticket_link || undefined,
@@ -148,7 +174,7 @@ const mapAppealRow = (row: AppealRow): Appeal => ({
   date: formatTicketDate(row.date),
   monthYear: row.month_year || undefined,
   comment: row.comment || '',
-  status: row.status,
+  status: normalizeAppealStatus(row.status),
   submittedAt: formatIsoDate(row.submitted_at),
   resolvedAt: row.resolved_at ? formatIsoDate(row.resolved_at) : undefined,
   resolvedBy: row.resolved_by || undefined,
