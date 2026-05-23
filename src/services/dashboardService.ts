@@ -148,21 +148,14 @@ const normalizeAppealStatus = (
     .toLowerCase()
     .trim()
 
-  const APPROVED = [
-    'approved',
-    'одоб',
-    'принят',
-    'принята',
-    'принято',
-  ]
+  const approved = ['approved', 'принят', 'принята', 'принято', 'одобр']
+  const rejected = ['rejected', 'отклон']
 
-  const REJECTED = [
-    'rejected',
-    'отклон',
-    'отклонен',
-    'отклонена',
-    'отказ',
-  ]
+  if (approved.some((k) => value.includes(k))) return 'approved'
+  if (rejected.some((k) => value.includes(k))) return 'rejected'
+
+  return 'pending'
+}
 
   if (APPROVED.some((k) => value.includes(k))) {
     return 'approved'
