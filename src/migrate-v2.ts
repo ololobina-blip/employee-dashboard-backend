@@ -31,9 +31,9 @@ async function applyMigration(connection: Awaited<ReturnType<typeof createConnec
   }
 }
 
-async function main(): Promise<void> {
+// ← добавили экспортируемую функцию
+export async function runMigrations(): Promise<void> {
   const connection = await createConnection()
-
   try {
     await applyMigration(connection, '002_appeal_revisions.sql')
     await applyMigration(connection, '003_ticket_source_coordinates.sql')
@@ -41,6 +41,11 @@ async function main(): Promise<void> {
   } finally {
     await connection.end()
   }
+}
+
+// для запуска вручную через npm run db:migrate
+async function main(): Promise<void> {
+  await runMigrations()
 }
 
 main().catch((error) => {
