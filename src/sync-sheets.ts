@@ -71,7 +71,7 @@ async function syncToDatabase(
           link, caller_number, execution_link,
           source_sheet_name, source_row
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          [
+                  [
           t.employeeName,
           row.sourceType,
           toSqlDate(row.rawDate),
@@ -99,6 +99,8 @@ async function syncToDatabase(
           t.link || null,
           t.callerNumber || null,
           t.executionLink || null,
+          row.sourceSheetName,
+          row.sourceRow,
         ],
       )
       ticketsInserted++
