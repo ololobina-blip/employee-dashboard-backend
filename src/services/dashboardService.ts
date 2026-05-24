@@ -220,7 +220,32 @@ export async function getTicketsForEmployee(employeeName: string): Promise<Ticke
     `SELECT * FROM tickets WHERE employee_name = ? ORDER BY date DESC, id DESC`,
     [employeeName],
   )
-  return rows.map(mapTicketRow)
+
+  console.log(
+    'RAW TICKET ROWS SAMPLE:',
+    rows.slice(0, 3).map((row) => ({
+      employee_name: row.employee_name,
+      date: row.date,
+      source_sheet_name: row.source_sheet_name,
+      source_row: row.source_row,
+      link: row.link,
+    })),
+  )
+
+  const tickets = rows.map(mapTicketRow)
+
+  console.log(
+    'MAPPED TICKETS SAMPLE:',
+    tickets.slice(0, 3).map((ticket) => ({
+      employeeName: ticket.employeeName,
+      date: ticket.date,
+      sourceSheetName: ticket.sourceSheetName,
+      sourceRow: ticket.sourceRow,
+      link: ticket.link,
+    })),
+  )
+
+  return tickets
 }
 
 export async function getRatingsForEmployee(employeeName: string): Promise<ClientRating[]> {
