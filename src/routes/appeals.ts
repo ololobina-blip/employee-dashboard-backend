@@ -17,12 +17,18 @@ export default async function appealsRoutes(app: FastifyInstance): Promise<void>
     async (request, reply) => {
       const input = request.body
 
-      if (!input.employeeName || !input.comment || !input.sourceSheetName || !input.sourceRow) {
-        return reply.status(400).send({
-          success: false,
-          error: 'Missing required fields: employeeName, comment, sourceSheetName, sourceRow',
-        })
-      }
+     if (
+  !input.employeeName ||
+  !input.comment ||
+  !input.sourceSheetName ||
+  input.sourceRow == null ||
+  !input.date
+) {
+  return reply.status(400).send({
+    success: false,
+    error: 'Missing required fields: employeeName, comment, sourceSheetName, sourceRow, date',
+  })
+}
 
       const appeal = await submitAppeal(input)
       return reply.status(201).send({ success: true, data: appeal })
