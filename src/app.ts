@@ -8,7 +8,8 @@ export async function createApp() {
 
   await app.register(cors, {
     origin: config.server.corsOrigins,
-    methods: ['GET', 'POST', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 
   await app.register(registerRoutes, { prefix: config.server.apiPrefix })
