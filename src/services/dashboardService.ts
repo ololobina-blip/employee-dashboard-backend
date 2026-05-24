@@ -132,6 +132,8 @@ const mapTicketRow = (row: TicketRow): Ticket => ({
   callerNumber: row.caller_number || undefined,
   executionLink: row.execution_link || undefined,
   sourceType: row.source_type,
+  sourceSheetName: row.source_sheet_name || undefined,
+  sourceRow: row.source_row ?? undefined,
 })
 
 const mapRatingRow = (row: RatingRow): ClientRating => ({
@@ -140,8 +142,6 @@ const mapRatingRow = (row: RatingRow): ClientRating => ({
   rating: Math.min(5, Math.max(1, Number(row.rating) || 1)),
   responsible: row.responsible,
   region: row.region || undefined,
-  sourceSheetName: row.source_sheet_name || undefined,
-  sourceRow: row.source_row ?? undefined,
 })
 
 const normalizeAppealStatus = (
