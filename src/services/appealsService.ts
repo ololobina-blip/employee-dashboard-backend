@@ -1,11 +1,14 @@
-// backend/src/services/appealsService.ts
-
 import { getPool } from '../db'
-import type { Appeal, AppealStatus } from '../types/api'
+import type { Appeal } from '../types/api'
 import { formatIsoDate } from './dates'
 import logger from '../utils/logger'
 
 const GOOGLE_SCRIPT_URL = process.env.GOOGLE_APPEALS_SCRIPT_URL
+
+interface GoogleScriptResponse {
+  success?: boolean
+  error?: string
+}
 
 // ─── Вызов Google Apps Script ─────────────────────────────────────────────────
 
@@ -23,7 +26,8 @@ async function callGoogleScript(body: Record<string, unknown>): Promise<void> {
     throw new Error(`Google Script responded with ${response.status}`)
   }
 
-  const result = await response.json()
+  const result = (await response.json()) as GoogleScriptResponse
+
   if (!result.success) {
     throw new Error(result.error || 'Google Script returned failure')
   }
@@ -45,7 +49,6 @@ export interface SubmitAppealInput {
 }
 
 export async function submitAppeal(input: SubmitAppealInput): Promise<Appeal> {
-  // 1. Сначала пишем в Google Sheet
   await callGoogleScript({
     action: 'submitAppeal',
     sourceSheetName: input.sourceSheetName,
@@ -58,7 +61,6 @@ export async function submitAppeal(input: SubmitAppealInput): Promise<Appeal> {
 
   logger.info(`Appeal submitted to Google Sheet: ${input.sourceSheetName} row ${input.sourceRow}`)
 
-  // 2. После успеха — пишем в БД
   const pool = getPool()
 
   const id = `${input.sourceSheetName}:${input.sourceRow}:${input.employeeName}:${input.date}`
@@ -126,7 +128,6 @@ export async function reviewAppeal(
 ): Promise<Appeal> {
   const pool = getPool()
 
-  // 1. Находим апелляцию в БД
   const [rows] = await pool.query<any[]>(
     `SELECT * FROM appeals WHERE id = ? LIMIT 1`,
     [appealId]
@@ -148,7 +149,6 @@ export async function reviewAppeal(
 
   const resolvedAt = new Date().toISOString()
 
-  // 2. Обновляем Google Sheet
   await callGoogleScript({
     action: 'updateAppealStatus',
     sourceSheetName: appeal.source_sheet_name,
@@ -166,7 +166,6 @@ export async function reviewAppeal(
 
   logger.info(`Appeal reviewed in Google Sheet: ${appeal.source_sheet_name} row ${appeal.source_row}`)
 
-  // 3. Обновляем appeals в БД
   await pool.query(
     `UPDATE appeals SET
       status = ?,
@@ -195,7 +194,6 @@ export async function reviewAppeal(
     ]
   )
 
-  // 4. Если approved — обновляем tickets в БД
   if (input.status === 'approved' && input.newTotalScore !== undefined) {
     await pool.query(
       `UPDATE tickets SET
