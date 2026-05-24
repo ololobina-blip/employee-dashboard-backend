@@ -89,7 +89,7 @@ const isApproved =
   const effectiveTotalScore =
     hasApprovedRevision && revisedTotalScore !== undefined ? revisedTotalScore : originalTotalScore
 
-  const ticket: Ticket = {
+   const ticket: Ticket = {
     date: formatTicketDate(dateRaw),
     monthYear,
     employeeName,
@@ -114,8 +114,10 @@ const isApproved =
     hasApprovedAppealRevision: hasApprovedRevision,
     link: source === 'chat' ? normalizeValue(row[9]) : '',
     callerNumber: source === 'calls' ? normalizeValue(row[9]) || undefined : undefined,
-   executionLink: undefined,
+    executionLink: undefined,
     sourceType: source,
+    sourceSheetName,
+    sourceRow,
   }
 
   const appealFlag = normalizeValue(row[10])
