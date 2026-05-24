@@ -55,7 +55,7 @@ export const parseTicketRow = (
   const employeeName = normalizeValue(row[2])
   const originalTotalScore = parseScore(row[8])
 
-  if (!employeeName || !originalTotalScore) return null
+ if (!employeeName || Number.isNaN(originalTotalScore)) return null
 
   const monthYear = normalizeValue(row[1]) || extractMonthYear(dateRaw)
 
