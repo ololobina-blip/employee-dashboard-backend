@@ -60,7 +60,7 @@ async function syncToDatabase(
     for (const row of parsedRows) {
       const t = row.ticket
       await connection.query(
-        `INSERT INTO tickets (
+          `INSERT INTO tickets (
           employee_name, source_type, \`date\`, ticket_datetime_raw, month_year,
           etiquette_comment, solution_comment, speed_comment, availability_comment, participation_comment, total_score,
           original_etiquette_comment, original_solution_comment, original_speed_comment,
@@ -68,8 +68,9 @@ async function syncToDatabase(
           revised_etiquette_comment, revised_solution_comment, revised_speed_comment,
           revised_availability_comment, revised_participation_comment, revised_total_score,
           has_approved_appeal_revision,
-          link, caller_number, execution_link
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          link, caller_number, execution_link,
+          source_sheet_name, source_row
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           t.employeeName,
           row.sourceType,
