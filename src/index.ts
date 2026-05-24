@@ -1,9 +1,10 @@
-﻿import 'dotenv/config'
+import 'dotenv/config'
 import cron from 'node-cron'
 import { createApp } from './app'
 import { config } from './config'
 import { closePool } from './db'
 import { isSyncRunning, syncSheets } from './sync-sheets'
+import { runMigrations } from './migrate-v2'
 
 async function runScheduledSync(): Promise<void> {
   if (isSyncRunning()) {
@@ -19,6 +20,9 @@ async function runScheduledSync(): Promise<void> {
 }
 
 async function start(): Promise<void> {
+  // ← сначала миграции, потом всё остальное
+  await runMigrations()
+
   const app = await createApp()
 
   await app.listen({
