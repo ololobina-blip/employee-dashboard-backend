@@ -10,6 +10,17 @@ interface GoogleScriptResponse {
   error?: string
 }
 
+function toSqlDate(value: string): string {
+  const match = value.trim().match(/^(\d{2})\.(\d{2})\.(\d{4})$/)
+
+  if (!match) {
+    throw new Error(`Invalid appeal date format: ${value}`)
+  }
+
+  const [, dd, mm, yyyy] = match
+  return `${yyyy}-${mm}-${dd}`
+}
+
 // ─── Вызов Google Apps Script ─────────────────────────────────────────────────
 
 async function callGoogleScript(body: Record<string, unknown>): Promise<void> {
@@ -76,18 +87,19 @@ export async function submitAppeal(input: SubmitAppealInput): Promise<Appeal> {
       submitted_at = VALUES(submitted_at),
       status = 'pending'`,
     [
-      id,
-      input.employeeName,
-      input.date,
-      input.monthYear || null,
-      input.comment,
-      input.submittedAt,
-      input.ticketLink || null,
-      input.callerNumber || null,
-      input.sourceType,
-      input.sourceSheetName,
-      input.sourceRow,
-    ]
+  id,
+  input.employeeName,
+  toSqlDate(input.date),
+  input.monthYear || null,
+  input.comment,
+  input.submittedAt,
+  input.ticketLink || null,
+  input.callerNumber || null,
+  input.sourceType,
+  input.sourceSheetName,
+  input.sourceRow,
+]
+
   )
 
   logger.info(`Appeal saved to DB: ${id}`)
