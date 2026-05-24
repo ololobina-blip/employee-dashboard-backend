@@ -38,6 +38,8 @@ export interface Ticket {
   callerNumber?: string
   executionLink?: string
   sourceType?: TicketSourceType
+  sourceSheetName?: string
+  sourceRow?: number
 }
 
 export interface PeriodStats {
