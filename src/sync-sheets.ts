@@ -71,7 +71,7 @@ async function syncToDatabase(
           link, caller_number, execution_link,
           source_sheet_name, source_row
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
+          [
           t.employeeName,
           row.sourceType,
           toSqlDate(row.rawDate),
